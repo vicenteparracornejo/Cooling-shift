@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Cooling Shift · Laboratorio de Transferencia de Calor</title>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Lato:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f3f7fb;--card:#fff;--ink:#213656;--mut:#5b6b85;--acc:#2a78b0;--acc2:#8fb4ff;--ok:#1f8a5b;--warn:#b3541e;--line:#d5dfec;--exp:#2a78b0;--mod:#d9534f;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#16243b;--card:#213656;--ink:#eaf2ff;--mut:#a9b9d4;--acc:#8fb4ff;--acc2:#cdfbe0;--ok:#6fe0ac;--warn:#ffb27a;--line:#36507a;--exp:#8fb4ff;--mod:#ff8f8a;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#16243b;--card:#213656;--ink:#eaf2ff;--mut:#a9b9d4;--acc:#8fb4ff;--acc2:#cdfbe0;--ok:#6fe0ac;--warn:#ffb27a;--line:#36507a;--exp:#8fb4ff;--mod:#ff8f8a;color-scheme:dark}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.55 Lato,system-ui,sans-serif}
+h1,h2{font-family:Anton,Impact,sans-serif;font-weight:400;letter-spacing:.02em;margin:0 0 .5rem;line-height:1.1}
+h1{font-size:clamp(2.8rem,10vw,5.5rem);background:linear-gradient(90deg,var(--acc2),var(--acc));-webkit-background-clip:text;background-clip:text;color:transparent}
+h2{font-size:clamp(1.8rem,5vw,2.6rem)}
+h3{margin:1.2rem 0 .4rem;font-size:1.05rem}
+header{display:flex;align-items:center;gap:.8rem;padding:.8rem 1rem;border-bottom:1px solid var(--line);flex-wrap:wrap}
+header b{font-family:Anton,sans-serif;font-weight:400;font-size:1.3rem;letter-spacing:.04em}
+#steps{display:flex;gap:4px;flex:1;min-width:180px}
+#steps i{flex:1;height:6px;border-radius:3px;background:var(--line)}
+#steps i.on{background:var(--acc)}
+#stepname{font-size:.85rem;color:var(--mut)}
+main{max-width:980px;margin:0 auto;padding:1.5rem 1rem 3rem}
+section{display:none}section.on{display:block}
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:1.1rem 1.2rem;margin:1rem 0}
+p{max-width:70ch}
+.mut{color:var(--mut)}
+button{font:700 1rem Lato,sans-serif;background:var(--acc);color:#fff;border:0;border-radius:8px;padding:.75rem 1.5rem;cursor:pointer;margin:.4rem .5rem .4rem 0}
+:root[data-theme="dark"] button.pri,@media (prefers-color-scheme:dark){}
+button.sec{background:transparent;color:var(--ink);border:1.5px solid var(--line)}
+button:disabled{opacity:.45;cursor:not-allowed}
+button:focus-visible,input:focus-visible,select:focus-visible,summary:focus-visible{outline:3px solid var(--acc2);outline-offset:2px}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) button:not(.sec){color:#16243b}}
+:root[data-theme="dark"] button:not(.sec){color:#16243b}
+label{display:block;font-weight:700;font-size:.9rem;margin:.6rem 0 .2rem}
+input,select{width:100%;font:inherit;padding:.55rem .7rem;border:1.5px solid var(--line);border-radius:8px;background:var(--bg);color:var(--ink)}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:.8rem}
+.kpi{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:.8rem 1rem}
+.kpi small{display:block;color:var(--mut)}
+.kpi b{font-size:1.7rem;font-variant-numeric:tabular-nums}
+.chart{width:100%;height:340px;display:block;background:var(--card);border:1px solid var(--line);border-radius:12px}
+.chk label{display:flex;gap:.6rem;align-items:center;font-weight:400;margin:.35rem 0}
+.chk input{width:auto}
+.tag{display:inline-block;padding:.15rem .6rem;border-radius:99px;font-size:.8rem;border:1px solid var(--line)}
+.tag.ok{color:var(--ok);border-color:var(--ok)}.tag.bad{color:var(--warn);border-color:var(--warn)}
+.tw{overflow-x:auto;max-height:240px;overflow-y:auto}
+table{border-collapse:collapse;width:100%;font-variant-numeric:tabular-nums}
+td,th{padding:.3rem .6rem;border-bottom:1px solid var(--line);text-align:right}
+th{position:sticky;top:0;background:var(--card)}
+pre{overflow-x:auto;background:var(--bg);padding:.8rem;border-radius:8px;font-size:.8rem}
+.eq{font-family:Georgia,serif;font-style:italic;font-size:1.15rem;padding:.6rem 0}
+#msg{min-height:1.4em;font-size:.9rem}
+</style>
+</head>
+<body>
+<header><b>Cooling Shift</b><div id="steps" aria-hidden="true"></div><span id="stepname"></span></header>
+<main>
+
+<section id="s1" class="on">
+<h1>Cooling Shift</h1>
+<p>Mide cómo se enfría el agua, observa la curva en tiempo real y comprueba si la Ley de Enfriamiento de Newton la describe.</p>
+<p class="mut">Laboratorio de Transferencia de Calor · Universidad Mayor, Ingeniería Civil en Computación e Informática.</p>
+<button id="go">Comenzar</button>
+</section>
+
+<section id="s2">
+<h2>Enfriamiento del agua</h2>
+<div class="card"><p><b>Objetivo:</b> medir la temperatura del agua mientras se enfría hasta la temperatura ambiente, estimar la constante de enfriamiento <i>k</i> y comparar el resultado con el modelo de Newton.</p>
+<div class="eq">dT/dt = −k (T − Tₐ)  ⇒  T(t) = Tₐ + (T₀ − Tₐ) e<sup>−kt</sup></div>
+<p class="mut">Variable medida: temperatura T (°C). Variable independiente: tiempo t (s). Sensor DS18B20 conectado a una ESP32.</p></div>
+<button class="sec" data-back>Volver</button><button data-next>Continuar</button>
+</section>
+
+<section id="s3">
+<h2>Preparación</h2>
+<div class="card chk"><b>Antes de medir, confirma:</b>
+<label><input type="checkbox" class="pc"> Tengo un recipiente con agua tibia (aprox. 40 °C).</label>
+<label><input type="checkbox" class="pc"> El sensor DS18B20 está sumergido sin tocar el fondo ni los bordes.</label>
+<label><input type="checkbox" class="pc"> La ESP32 está conectada por USB y el cableado eléctrico está lejos del agua.</label>
+</div>
+<div class="card"><b>Fuente de datos</b>
+<select id="src"><option value="sim">Simulación (sin hardware)</option><option value="esp">ESP32 por USB (Web Serial)</option></select>
+<div id="simp" class="grid">
+<div><label for="pT0">Temperatura inicial T₀ (°C)</label><input id="pT0" type="number" value="45" step="0.5" min="20" max="95"></div>
+<div><label for="pK">Constante k simulada (1/s)</label><input id="pK" type="number" value="0.0012" step="0.0001" min="0.0001"></div>
+<div><label for="pN">Ruido del sensor (±°C)</label><input id="pN" type="number" value="0.15" step="0.05" min="0"></div>
+<div><label for="pS">Aceleración (×)</label><select id="pS"><option>10</option><option selected>20</option><option>60</option></select></div>
+</div>
+<div class="grid">
+<div><label for="pTa">Temperatura ambiente Tₐ (°C)</label><input id="pTa" type="number" value="22" step="0.5"></div>
+<div><label for="pDt">Intervalo de muestreo (s)</label><select id="pDt"><option>2</option><option selected>5</option><option>10</option></select></div>
+</div>
+<div id="espp" style="display:none"><p class="mut">La ESP32 debe enviar por serie (115200 baudios) una línea por muestra: <code>tiempo_s,temperatura_C</code> o solo <code>temperatura_C</code>. El navegador debe ser Chrome o Edge.</p>
+<details><summary>Ver ejemplo de código Arduino</summary><pre>#include &lt;OneWire.h&gt;
+#include &lt;DallasTemperature.h&gt;
+OneWire ow(4); DallasTemperature s(&amp;ow);
+void setup(){ Serial.begin(115200); s.begin(); }
+void loop(){
+  s.requestTemperatures();
+  Serial.print(millis()/1000.0); Serial.print(",");
+  Serial.println(s.getTempCByIndex(0));
+  delay(5000);
+}</pre></details>
+<button class="sec" id="conn">Conectar ESP32</button><span id="connst" class="tag">sin conexión</span></div>
+</div>
+<button class="sec" data-back>Volver</button><button id="ready" disabled>Listo</button>
+<p id="msg3" class="mut"></p>
+</section>
+
+<section id="s4">
+<h2>Iniciar medición</h2>
+<div class="card"><p>Confirma que el sensor está bien ubicado y no muevas el recipiente durante el experimento.</p>
+<div class="grid"><div class="kpi"><small>Temperatura inicial registrada</small><b id="t0v">— °C</b></div><div class="kpi"><small>Temperatura ambiente</small><b id="tav">— °C</b></div></div></div>
+<button class="sec" data-back>Volver</button><button id="start">Iniciar</button>
+</section>
+
+<section id="s5">
+<h2>Medición en tiempo real</h2>
+<div class="grid"><div class="kpi"><small>Temperatura actual</small><b id="nowT">—</b></div><div class="kpi"><small>Tiempo transcurrido</small><b id="nowt">—</b></div><div class="kpi"><small>Muestras válidas</small><b id="nowN">0</b></div></div>
+<canvas id="c5" class="chart" role="img" aria-label="Gráfico de temperatura en °C versus tiempo en segundos"></canvas>
+<p id="msg" class="mut"></p>
+<button id="stop">Finalizar</button>
+</section>
+
+<section id="s6">
+<h2>Medición finalizada</h2>
+<div class="card"><p>El registro se detuvo y los datos quedaron guardados en esta sesión. Se descartaron los valores faltantes o inválidos (sin filtros que alteren la tendencia).</p>
+<div class="grid"><div class="kpi"><small>Muestras válidas</small><b id="v6">0</b></div><div class="kpi"><small>Descartadas</small><b id="d6">0</b></div></div>
+<button class="sec" id="csv">Descargar datos (CSV)</button></div>
+<div class="card tw"><table><thead><tr><th>t (s)</th><th>T (°C)</th></tr></thead><tbody id="tb"></tbody></table></div>
+<button id="toRes">Ver resultados</button>
+</section>
+
+<section id="s7">
+<h2>Resultados</h2>
+<div class="grid" id="kp"></div>
+<h3>Curva experimental de enfriamiento</h3>
+<canvas id="c7" class="chart" role="img" aria-label="Curva experimental de temperatura en °C versus tiempo en segundos"></canvas>
+<p class="mut" id="n7"></p>
+<button data-next>Comparar con el modelo</button>
+</section>
+
+<section id="s8">
+<h2>Comparación con el modelo</h2>
+<canvas id="c8" class="chart" role="img" aria-label="Datos experimentales y curva de la Ley de Newton"></canvas>
+<div class="card"><div class="eq" id="eqf"></div><p id="cmp"></p></div>
+<button class="sec" data-back>Volver</button><button data-next>Continuar</button>
+</section>
+
+<section id="s9">
+<h2>Cierre del laboratorio</h2>
+<div class="card" id="sum"></div>
+<div class="card"><b>Interpretación</b><p id="interp"></p><p class="mut" id="err"></p></div>
+<button id="fin">Finalizar experimento</button><button class="sec" id="again">Nuevo experimento</button>
+</section>
+</main>
+
+<script>
+(function(){
+var NAMES=["Inicio","Experimento","Preparación","Iniciar","Medición","Finalizar","Resultados","Comparación","Cierre"];
+var cur=1,D=[],bad=0,tm=null,port=null,reader=null,P={},R=null;
+var $=function(i){return document.getElementById(i)};
+var st=$("steps");NAMES.forEach(function(){st.appendChild(document.createElement("i"))});
+function show(n){cur=n;document.querySelectorAll("section").forEach(function(s,i){s.classList.toggle("on",i+1===n)});
+[].forEach.call(st.children,function(e,i){e.classList.toggle("on",i<n)});$("stepname").textContent=n+"/9 · "+NAMES[n-1];window.scrollTo(0,0);
+if(n===7)res();if(n===8)cmp();if(n===9)close_();}
+document.querySelectorAll("[data-next]").forEach(function(b){b.onclick=function(){show(cur+1)}});
+document.querySelectorAll("[data-back]").forEach(function(b){b.onclick=function(){show(cur-1)}});
+$("go").onclick=function(){show(2)};
+/* preparación */
+function chk(){var ok=[].every.call(document.querySelectorAll(".pc"),function(c){return c.checked});
+var esp=$("src").value==="esp";$("ready").disabled=!(ok&&(!esp||port));$("msg3").textContent=esp&&!port?"Conecta la ESP32 para continuar.":""}
+document.querySelectorAll(".pc").forEach(function(c){c.onchange=chk});
+$("src").onchange=function(){var e=this.value==="esp";$("espp").style.display=e?"block":"none";$("simp").style.display=e?"none":"grid";chk()};
+$("conn").onclick=async function(){
+ try{port=await navigator.serial.requestPort();await port.open({baudRate:115200});$("connst").textContent="conectada";$("connst").className="tag ok";chk()}
+ catch(e){port=null;$("connst").textContent="error";$("connst").className="tag bad";$("msg3").textContent="No se pudo abrir el puerto serie (usa Chrome o Edge, o elige simulación)."}};
+function readP(){P={src:$("src").value,T0:+$("pT0").value,k:+$("pK").value,noise:+$("pN").value,spd:+$("pS").value,Ta:+$("pTa").value,dt:+$("pDt").value}}
+$("ready").onclick=function(){readP();$("t0v").textContent=P.src==="sim"?P.T0.toFixed(1)+" °C":"se registra al iniciar";$("tav").textContent=P.Ta.toFixed(1)+" °C";show(4)};
+/* medición */
+function valid(T,t){return isFinite(T)&&isFinite(t)&&T>-50&&T<120&&T!==-127&&T!==85}
+function add(t,T){if(valid(T,t)){D.push([t,T]);$("nowT").textContent=T.toFixed(2)+" °C";$("nowt").textContent=fmt(t);$("nowN").textContent=D.length;draw($("c5"),[{d:D,c:"--exp",pts:1}])}else{bad++}}
+function fmt(s){s=Math.round(s);return Math.floor(s/60)+" min "+("0"+s%60).slice(-2)+" s"}
+function gauss(){var u=0,v=0;while(!u)u=Math.random();v=Math.random();return Math.sqrt(-2*Math.log(u))*Math.cos(2*Math.PI*v)}
+$("start").onclick=function(){D=[];bad=0;R=null;show(5);$("msg").textContent="Midiendo… no muevas el recipiente ni el sensor.";
+ if(P.src==="sim"){var t=0;add(0,P.T0+gauss()*P.noise);
+  tm=setInterval(function(){t+=P.dt;var T=P.Ta+(P.T0-P.Ta)*Math.exp(-P.k*t)+gauss()*P.noise;add(t,T)},Math.max(100,P.dt/P.spd*1000))}
+ else listen()};
+async function listen(){var dec=new TextDecoderStream();port.readable.pipeTo(dec.writable).catch(function(){});reader=dec.readable.getReader();var buf="",t0=performance.now();
+ try{while(true){var r=await reader.read();if(r.done)break;buf+=r.value;var ls=buf.split("\n");buf=ls.pop();
+  ls.forEach(function(l){l=l.trim();if(!l)return;var p=l.split(","),T,t;if(p.length>=2){t=parseFloat(p[0]);T=parseFloat(p[1])}else{T=parseFloat(p[0]);t=(performance.now()-t0)/1000}
+  if(D.length===0&&t>0&&p.length>=2)t0=performance.now()-t*1000;add(t,T)})}}catch(e){}}
+$("stop").onclick=async function(){if(tm){clearInterval(tm);tm=null}
+ if(reader){try{await reader.cancel()}catch(e){}reader=null}
+ if(D.length<5){$("msg").textContent="Se necesitan al menos 5 muestras válidas. Espera unos segundos más.";return}
+ if(P.src==="esp"){P.T0=D[0][1]}
+ $("v6").textContent=D.length;$("d6").textContent=bad;
+ $("tb").innerHTML=D.map(function(r){return "<tr><td>"+r[0].toFixed(1)+"</td><td>"+r[1].toFixed(2)+"</td></tr>"}).join("");show(6)};
+$("csv").onclick=function(){var s="t_s,T_C\n"+D.map(function(r){return r[0].toFixed(2)+","+r[1].toFixed(3)}).join("\n");
+ var a=document.createElement("a");a.href="data:text/csv;charset=utf-8,"+encodeURIComponent(s);a.download="cooling_shift.csv";a.click()};
+$("toRes").onclick=function(){show(7)};
+/* análisis */
+function analyze(){
+ var Ta=P.Ta,pts=D.filter(function(r){return r[1]-Ta>0.5});
+ if(pts.length<3)return null;
+ var x=pts.map(function(r){return r[0]}),y=pts.map(function(r){return Math.log(r[1]-Ta)});
+ var n=x.length,mx=x.reduce(function(a,b){return a+b})/n,my=y.reduce(function(a,b){return a+b})/n,sxy=0,sxx=0,syy=0;
+ for(var i=0;i<n;i++){sxy+=(x[i]-mx)*(y[i]-my);sxx+=(x[i]-mx)*(x[i]-mx);syy+=(y[i]-my)*(y[i]-my)}
+ var m=sxy/sxx,k=-m,r2=syy?sxy*sxy/(sxx*syy):1;
+ var T0=D[0][1],model=function(t){return Ta+(T0-Ta)*Math.exp(-k*t)};
+ var Ts=D.map(function(r){return r[1]}),mean=Ts.reduce(function(a,b){return a+b})/Ts.length;
+ var sd=Math.sqrt(Ts.reduce(function(a,b){return a+(b-mean)*(b-mean)},0)/(Ts.length-1));
+ var mape=D.reduce(function(a,r){return a+Math.abs(r[1]-model(r[0]))/Math.abs(r[1])},0)/D.length*100;
+ var rmse=Math.sqrt(D.reduce(function(a,r){var e=r[1]-model(r[0]);return a+e*e},0)/D.length);
+ var kerr=P.src==="sim"?Math.abs(k-P.k)/P.k*100:null;
+ return{k:k,r2:r2,T0:T0,Tf:D[D.length-1][1],tf:D[D.length-1][0],mean:mean,sd:sd,mape:mape,rmse:rmse,kerr:kerr,model:model,Ta:Ta}}
+function kpi(l,v){return '<div class="kpi"><small>'+l+'</small><b>'+v+'</b></div>'}
+function res(){R=analyze();if(!R){$("kp").innerHTML="<p>No hay datos suficientes por encima de la temperatura ambiente para estimar k.</p>";return}
+ $("kp").innerHTML=kpi("Constante k",R.k.toExponential(2)+" 1/s")+kpi("Promedio T",R.mean.toFixed(2)+" °C")+kpi("Desviación estándar",R.sd.toFixed(2)+" °C")+kpi("Error porcentual",R.mape.toFixed(2)+" %")+kpi("R² del ajuste",R.r2.toFixed(4))+kpi("Tiempo de vida τ = 1/k",fmt(1/R.k));
+ draw($("c7"),[{d:D,c:"--exp",pts:1}]);
+ $("n7").textContent="k se estima por regresión lineal de ln(T − Tₐ) contra t. Error porcentual: promedio de |T medida − T modelo| / T medida. T₀ = "+R.T0.toFixed(2)+" °C, Tₐ = "+R.Ta.toFixed(1)+" °C."}
+function cmp(){if(!R)return;var th=[];var tf=R.tf;for(var i=0;i<=120;i++){var t=tf*i/120;th.push([t,R.model(t)])}
+ draw($("c8"),[{d:D,c:"--exp",pts:1,l:"Experimental (DS18B20)"},{d:th,c:"--mod",l:"Modelo de Newton"}]);
+ $("eqf").innerHTML="T(t) = "+R.Ta.toFixed(1)+" + ("+R.T0.toFixed(2)+" − "+R.Ta.toFixed(1)+") e<sup>−"+R.k.toExponential(2)+"·t</sup>";
+ $("cmp").textContent="La raíz del error cuadrático medio entre ambas curvas es "+R.rmse.toFixed(2)+" °C y el coeficiente R² del ajuste es "+R.r2.toFixed(4)+"."}
+function close_(){if(!R)return;var good=R.r2>=0.98&&R.mape<2;
+ $("sum").innerHTML="<div class='grid'>"+kpi("T inicial",R.T0.toFixed(2)+" °C")+kpi("T final",R.Tf.toFixed(2)+" °C")+kpi("Duración",fmt(R.tf))+kpi("Variación",(R.T0-R.Tf).toFixed(2)+" °C")+kpi("k",R.k.toExponential(2)+" 1/s")+kpi("Error %",R.mape.toFixed(2)+" %")+"</div>";
+ $("interp").textContent=good?"La temperatura decae de forma exponencial hacia la temperatura ambiente y el modelo de Newton reproduce bien los datos: la rapidez de enfriamiento es proporcional a la diferencia T − Tₐ. El agua pierde la mitad de su exceso de temperatura cada "+fmt(Math.LN2/R.k)+".":"El ajuste con la Ley de Newton es limitado (R² = "+R.r2.toFixed(3)+"). Revisa posibles causas: convección o evaporación importantes, temperatura ambiente mal estimada, sensor mal ubicado o muy pocas muestras.";
+ $("err").textContent=R.kerr!==null?"Datos simulados: el valor de k ingresado fue "+P.k.toExponential(2)+" 1/s; la estimación difiere un "+R.kerr.toFixed(1)+" %.":"Fuentes de error habituales: resolución del DS18B20 (0,0625 °C), tolerancia ±0,5 °C, evaporación y corrientes de aire."}
+$("fin").onclick=function(){show(1)};$("again").onclick=function(){D=[];R=null;show(3)};
+/* gráfico */
+function css(v){return getComputedStyle(document.documentElement).getPropertyValue(v).trim()}
+function draw(cv,S){var w=cv.clientWidth,h=cv.clientHeight,r=window.devicePixelRatio||1;cv.width=w*r;cv.height=h*r;var g=cv.getContext("2d");g.scale(r,r);g.clearRect(0,0,w,h);
+ var all=[].concat.apply([],S.map(function(s){return s.d}));if(!all.length)return;
+ var xs=all.map(function(p){return p[0]}),ys=all.map(function(p){return p[1]});
+ var x1=Math.max.apply(null,xs)||1,y0=Math.min.apply(null,ys),y1=Math.max.apply(null,ys);var pad=(y1-y0)*0.1||1;y0-=pad;y1+=pad;
+ var L=52,B=40,Tp=14,Rr=14,pw=w-L-Rr,ph=h-B-Tp,ink=css("--ink"),mut=css("--mut"),ln=css("--line");
+ var X=function(x){return L+x/x1*pw},Y=function(y){return Tp+(y1-y)/(y1-y0)*ph};
+ g.font="12px Lato,sans-serif";g.fillStyle=mut;g.strokeStyle=ln;g.lineWidth=1;
+ for(var i=0;i<=5;i++){var yv=y0+(y1-y0)*i/5,yy=Y(yv);g.beginPath();g.moveTo(L,yy);g.lineTo(w-Rr,yy);g.stroke();g.textAlign="right";g.fillText(yv.toFixed(1),L-6,yy+4)}
+ for(var j=0;j<=5;j++){var xv=x1*j/5,xx=X(xv);g.textAlign="center";g.fillText(Math.round(xv),xx,h-B+16)}
+ g.fillStyle=ink;g.textAlign="center";g.fillText("Tiempo (s)",L+pw/2,h-8);
+ g.save();g.translate(12,Tp+ph/2);g.rotate(-Math.PI/2);g.fillText("Temperatura (°C)",0,0);g.restore();
+ S.forEach(function(s,si){var c=css(s.c);g.strokeStyle=c;g.fillStyle=c;g.lineWidth=2;g.beginPath();s.d.forEach(function(p,i){i?g.lineTo(X(p[0]),Y(p[1])):g.moveTo(X(p[0]),Y(p[1]))});g.stroke();
+  if(s.pts&&s.d.length<150)s.d.forEach(function(p){g.beginPath();g.arc(X(p[0]),Y(p[1]),2.5,0,7);g.fill()});
+  if(s.l){g.textAlign="left";g.fillStyle=c;g.fillRect(L+10,Tp+8+si*18,14,3);g.fillStyle=ink;g.fillText(s.l,L+30,Tp+13+si*18)}})}
+window.addEventListener("resize",function(){if(cur===5)draw($("c5"),[{d:D,c:"--exp",pts:1}]);if(cur===7)res();if(cur===8)cmp()});
+show(1);
+})();
+</script>
+</body>
+</html>
